@@ -1,49 +1,108 @@
-### EX4 Implementation of Cluster and Visitor Segmentation for Navigation patterns
-### DATE: 
-### AIM: To implement Cluster and Visitor Segmentation for Navigation patterns in Python.
-### Description:
-<div align= "justify">Cluster visitor segmentation refers to the process of grouping or categorizing visitors to a website, 
-  application, or physical location into distinct clusters or segments based on various characteristics or behaviors they exhibit. 
-  This segmentation allows businesses or organizations to better understand their audience and tailor their strategies, marketing efforts, 
-  or services to meet the specific needs and preferences of each cluster.</div>
-  
-### Procedure:
-1) Read the CSV file: Use pd.read_csv to load the CSV file into a pandas DataFrame.
-2) Define Age Groups by creating a dictionary containing age group conditions using Boolean conditions.
-3) Segment Visitors by iterating through the dictionary and filter the visitors into respective age groups.
-4) Visualize the result using matplotlib.
+# AIM
 
-### Program:
+To implement visitor segmentation using the K-Means clustering algorithm in Python based on the Age feature and visualize the clustered visitor groups using a scatter plot.
+
+# ALGORITHM
+
+1. Import the required Python libraries.
+2. Read the visitor dataset (CSV file).
+3. Load the dataset into a DataFrame.
+4. Select the **Age** feature for clustering.
+5. Set the number of clusters (**K = 3**).
+6. Choose the first **K** age values as the initial centroids.
+7. Calculate the distance of each visitor from every centroid.
+8. Assign each visitor to the nearest centroid.
+9. Compute the new centroid of each cluster by taking the average age.
+10. Repeat the assignment and centroid update steps until the centroids do not change.
+11. Display the cluster-wise visitor details.
+12. Visualize the clusters using a scatter plot.
+13. Analyze the clustered visitor groups.
+
+
+# Program 
 ```python
-# Visitor segmentation based on characteristics
-# read the data
-/*WRITE YOUR CODE HERE
+import pandas as pd
+import matplotlib.pyplot as plt
 
-# Perform segmentation based on characteristics (e.g., age groups)
-/*WRITE YOUR CODE HERE
+# Read CSV file
+df = pd.read_csv("clustervisitor.csv")
 
-```
-### Output:
+# Select Age feature
+X = df["Age"].tolist()
 
-### Visualization:
-```python
-# Create a list to store counts of visitors in each age group
-/*WRITE YOUR CODE HERE
+# Number of clusters
+k = 3
 
-# Count visitors in each age group
-/*WRITE YOUR CODE HERE
-    
-# Define age group labels and plot a bar chart
-/*WRITE YOUR CODE HERE
+# Step 1: Choose initial centroids
+centroids = X[:k]
 
-plt.figure(figsize=(8, 6))
-plt.bar(age_group_labels, visitor_counts, color='skyblue')
-plt.xlabel('Age Groups')
-plt.ylabel('Number of Visitors')
-plt.title('Visitor Distribution Across Age Groups')
+while True:
+
+ # Step 2: Assign each data point to the nearest centroid
+    clusters = [[] for _ in range(k)]
+
+    for age in X:
+        distances = [abs(age - c) for c in centroids]
+        cluster = distances.index(min(distances))
+        clusters[cluster].append(age)
+  # Step 3: Calculate new centroids
+    new_centroids = []
+    for cluster in clusters:
+        if cluster:
+            new_centroids.append(sum(cluster) / len(cluster))
+        else:
+            new_centroids.append(0)
+
+    if new_centroids == centroids:
+        break
+
+    centroids = new_centroids
+
+# Step 4: Display cluster-wise output
+print("Final Centroids:", centroids)
+
+for i in range(k):
+    print(f"\nCluster {i+1}:")
+    print(clusters[i])
+
+
+# Step 5: Visualize clusters
+colors = ["red", "green", "blue"]
+# Step 4: Display cluster-wise output
+print("Final Centroids:", centroids)
+
+for i in range(k):
+    print(f"\nCluster {i+1}:")
+    print(clusters[i])
+
+for i in range(k):
+    plt.scatter(
+        clusters[i],
+        [i + 1] * len(clusters[i]),
+        color=colors[i],
+        label=f"Cluster {i+1}"
+    )
+
+plt.xlabel("Age")
+plt.ylabel("Cluster")
+plt.title("Visitor Segmentation using K-Means")
+plt.legend()
+plt.grid(True)
 plt.show()
 ```
-### Output:
+
+# Output
+<img width="648" height="212" alt="image_59" src="https://github.com/user-attachments/assets/1d98abdd-f3e8-42cc-bd02-aec8e3da2d40" />
+<img width="684" height="535" alt="image" src="https://github.com/user-attachments/assets/e55a24a1-4d6b-41b6-b7bf-0a3a49d0547d" />
 
 
-### Result:
+# RESULT:
+Thus, the K-Means clustering algorithm was successfully implemented, and the visitors were grouped into different clusters and visualized using a scatter plot.
+
+
+
+
+
+
+
+
